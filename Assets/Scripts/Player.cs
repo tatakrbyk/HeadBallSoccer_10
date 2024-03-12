@@ -5,31 +5,47 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player instance;
     public float horizontialAxis;
     public float speed;
 
-    private Rigidbody2D rigidbodyPlayer;
+    private Rigidbody2D _rbPlayer;
 
     public bool canShoot;
     public bool grounded;
+    public bool canHead;
     
     private GameObject _ball;
     public Transform checkGround;
 
     public LayerMask groundLayer;
+
+    private void Awake()
+    {
+        if(instance == null)
+            instance = this;
+    }
     private void Start()
     {
-        rigidbodyPlayer = GetComponent<Rigidbody2D>();
+        _rbPlayer = GetComponent<Rigidbody2D>();
         _ball = GameObject.FindGameObjectWithTag("Ball");
     }
 
     private void Update()
     {
         horizontialAxis = Input.GetAxis("Horizontal");
+        if(grounded)
+        {
+            canHead = false;
+        }
+        else
+        {
+            canHead = true;
+        }
     }
     private void FixedUpdate()
     {
-        rigidbodyPlayer.velocity = new Vector2(Time.deltaTime * speed * horizontialAxis, rigidbodyPlayer.velocity.y);
+        _rbPlayer.velocity = new Vector2(Time.deltaTime * speed * horizontialAxis, _rbPlayer.velocity.y);
         grounded = Physics2D.OverlapCircle(checkGround.position, .2f, groundLayer);
     }
 
@@ -55,7 +71,8 @@ public class Player : MonoBehaviour
     {
         if(grounded)
         {
-            rigidbodyPlayer.velocity = new Vector2(rigidbodyPlayer.velocity.x, 15);
+            canHead = true;
+            _rbPlayer.velocity = new Vector2(_rbPlayer.velocity.x, 15);
         }
     }
 }

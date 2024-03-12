@@ -5,16 +5,26 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     private GameObject _player;
+    private GameObject _AI;
 
     private void Start()
     {
         _player = GameObject.FindGameObjectWithTag("Player");
+        _AI = GameObject.FindGameObjectWithTag("AI");
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Player")
         {
             _player.GetComponent<Player>().canShoot = true;
+        }
+        if (collision.gameObject.tag == "canShootAI")
+        {
+            _AI.GetComponent<AIPlayer>().canShootAI = true;
+        }
+        if(collision.gameObject.tag == "canHeadAI")
+        {
+            _AI.GetComponent<AIPlayer>().canHeadAI = true;
         }
     }
 
@@ -23,6 +33,14 @@ public class Ball : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             _player.GetComponent<Player>().canShoot = false;
+        }
+        if (collision.gameObject.tag == "canShootAI")
+        {
+            _AI.GetComponent<AIPlayer>().canShootAI = false;
+        }
+        if (collision.gameObject.tag == "canHeadAI")
+        {
+            _AI.GetComponent<AIPlayer>().canHeadAI = false;
         }
     }
 }
