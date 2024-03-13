@@ -9,7 +9,12 @@ public class UITeam : MonoBehaviour
     public Sprite[] flagTeam;
     public string[] nameTeam;
     public Sprite[] star;
-        
+
+    public Sprite[] head;
+    public Sprite[] body;
+    public Sprite[] shoe;
+
+
     private void Awake()
     {
         if (_instance == null)

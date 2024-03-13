@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
-
+using UnityEngine.UI;
+using static Unity.IO.LowLevel.Unsafe.AsyncReadManagerMetrics;
 public class GameController : MonoBehaviour
 {
     private static GameController _instance; public static GameController Instance { get { return _instance; } }
@@ -24,6 +24,22 @@ public class GameController : MonoBehaviour
     private GameObject _ball;
     private GameObject _player;
     private GameObject _AI;
+
+    public Image flagLeft;
+    public Image flagRight;
+
+    public TextMeshProUGUI nameLeft;
+    public TextMeshProUGUI nameRight;
+
+    // Initialization element player and UI
+
+    public SpriteRenderer headPlayer;
+    public SpriteRenderer shoePlayer;
+    public SpriteRenderer bodyPlayer;
+
+    public SpriteRenderer headAI;
+    public SpriteRenderer shoeAI;
+    public SpriteRenderer bodyAI;
     private void Awake()
     {
         if (_instance == null)
@@ -39,6 +55,20 @@ public class GameController : MonoBehaviour
         _ball = GameObject.FindGameObjectWithTag("Ball");
         _player = GameObject.FindGameObjectWithTag("Player");
         _AI = GameObject.FindGameObjectWithTag("AI");
+
+        flagLeft.sprite = UITeam.Instance.flagTeam[PlayerPrefs.GetInt("valuePlayer", 1) - 1];
+        nameLeft.text = UITeam.Instance.nameTeam[PlayerPrefs.GetInt("valuePlayer", 1) - 1];
+
+        flagRight.sprite = UITeam.Instance.flagTeam[PlayerPrefs.GetInt("valueAI", 1) - 1];
+        nameRight.text = UITeam.Instance.nameTeam[PlayerPrefs.GetInt("valueAI", 1) - 1];
+
+        headPlayer.sprite = UITeam.Instance.head[PlayerPrefs.GetInt("valuePlayer", 1) - 1];
+        bodyPlayer.sprite = UITeam.Instance.body[PlayerPrefs.GetInt("valuePlayer", 1) - 1];
+        shoePlayer.sprite = UITeam.Instance.shoe[Random.Range(0,4)];
+
+        headAI.sprite = UITeam.Instance.head[PlayerPrefs.GetInt("valueAI", 1) - 1];
+        bodyAI.sprite = UITeam.Instance.body[PlayerPrefs.GetInt("valueAI", 1) - 1];
+        shoeAI.sprite = UITeam.Instance.shoe[Random.Range(0, 4)];
 
         StartCoroutine(BeginMatch());
     }

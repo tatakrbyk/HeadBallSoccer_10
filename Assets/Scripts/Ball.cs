@@ -35,7 +35,7 @@ public class Ball : MonoBehaviour
                 Instantiate(_goals, new Vector3(0, -2, 0), Quaternion.identity);
                 GameController.Instance.numberGoalsLeft++;
                 GameController.Instance.isScore = true;
-                GameController.Instance.ContinueMatch(true);
+                GameController.Instance.ContinueMatch(false);
             }
         }
         if (collision.gameObject.tag == "GoalsLeft")
@@ -46,7 +46,7 @@ public class Ball : MonoBehaviour
 
                 GameController.Instance.numberGoalsRight++;
                 GameController.Instance.isScore = true;
-                GameController.Instance.ContinueMatch(false);
+                GameController.Instance.ContinueMatch(true);
                 
             }
         }

@@ -38,6 +38,10 @@ public class Exhibition : MonoBehaviour
     {
         SceneManager.LoadScene("Menu");
     }
+    public void NextButton()
+    {
+        SceneManager.LoadScene("Game");
+    }
     public void ButtonLeftPlayer()
     {
         if(PlayerPrefs.GetInt("valuePlayer", 1) <= 1)
