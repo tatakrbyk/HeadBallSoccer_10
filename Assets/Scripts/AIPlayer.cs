@@ -12,6 +12,7 @@ public class AIPlayer : MonoBehaviour
     public Transform checkGround;
 
     private GameObject _ball;
+    private GameObject _player;
 
     private Rigidbody2D _rbAI;
 
@@ -25,19 +26,24 @@ public class AIPlayer : MonoBehaviour
     private void Start()
     {
         _ball = GameObject.FindGameObjectWithTag("Ball");
+        _player = GameObject.FindGameObjectWithTag("Player");
         _rbAI = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
     {
-        Move();
-        if (canShootAI)
+        if (GameController.Instance.isScore == false && GameController.Instance.EndMatch == false)
         {
-            Shoot();
-        }
-        if(canHeadAI && grounded)
-        {
-            Jump();
+            Move();
+            if (canShootAI)
+            {
+                Shoot();
+            }
+            if(canHeadAI && grounded)
+            {
+                Jump();
+            }
+
         }
     }
     private void FixedUpdate()
@@ -49,17 +55,25 @@ public class AIPlayer : MonoBehaviour
     {
         if(Mathf.Abs(_ball.transform.position.x - transform.position.x) < rangeOfDefence)
         {
-            if(_ball.transform.position.x < transform.position.x && transform.position.y < -1f) // Check >
+            if (Mathf.Abs(_ball.transform.position.x - transform.position.x) <= Mathf.Abs(_ball.transform.position.x - _player.transform.position.x) 
+                && _ball.transform.position.y < -1f && _ball.transform.position.x < transform.position.x)
             {
                 _rbAI.velocity = new Vector2(Time.deltaTime * speed, _rbAI.velocity.y);
             }
-            else if(_ball.transform.position.y >= 1f && transform.position.x >= defencePos.position.x)
-            {
-                _rbAI.velocity = new Vector2(0, _rbAI.velocity.y);
-            }
             else
             {
-                _rbAI.velocity = new Vector2(-Time.deltaTime * speed, _rbAI.velocity.y);
+                if (_ball.transform.position.x < transform.position.x && transform.position.y < -1f) // Check >
+                {
+                    _rbAI.velocity = new Vector2(Time.deltaTime * speed, _rbAI.velocity.y);
+                }
+                else if (_ball.transform.position.y >= 1f && transform.position.x >= defencePos.position.x)
+                {
+                    _rbAI.velocity = new Vector2(0, _rbAI.velocity.y);
+                }
+                else
+                {
+                    _rbAI.velocity = new Vector2(-Time.deltaTime * speed, _rbAI.velocity.y);
+                }
             }
         }
         else
@@ -78,7 +92,7 @@ public class AIPlayer : MonoBehaviour
     public void Shoot()
     {
         //_ball.GetComponent<Rigidbody>().velocity = new Vector2(0, 0);
-        _ball.GetComponent<Rigidbody2D>().AddForce(new Vector2(-300, 400));
+        _ball.GetComponent<Rigidbody2D>().AddForce(new Vector2(-50, 00));
 
     }
 

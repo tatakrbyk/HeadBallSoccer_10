@@ -6,6 +6,8 @@ public class Ball : MonoBehaviour
 {
     private GameObject _player;
     private GameObject _AI;
+    public GameObject _goals;
+    public GameObject _goalsAI;
 
     private void Start()
     {
@@ -25,6 +27,32 @@ public class Ball : MonoBehaviour
         if(collision.gameObject.tag == "canHeadAI")
         {
             _AI.GetComponent<AIPlayer>().canHeadAI = true;
+        }
+        if( collision.gameObject.tag == "GoalsRight")
+        {
+            if(GameController.Instance.isScore == false && GameController.Instance.EndMatch == false)
+            {
+                Instantiate(_goals, new Vector3(0, -2, 0), Quaternion.identity);
+                GameController.Instance.numberGoalsLeft++;
+                GameController.Instance.isScore = true;
+                GameController.Instance.ContinueMatch(true);
+            }
+        }
+        if (collision.gameObject.tag == "GoalsLeft")
+        {
+            if (GameController.Instance.isScore == false && GameController.Instance.EndMatch == false)
+            {
+                Instantiate(_goalsAI, new Vector3(0, -2, 0), Quaternion.identity);
+
+                GameController.Instance.numberGoalsRight++;
+                GameController.Instance.isScore = true;
+                GameController.Instance.ContinueMatch(false);
+                
+            }
+        }
+        if(collision.gameObject.tag == "BehindCol")
+        {
+            GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
         }
     }
 

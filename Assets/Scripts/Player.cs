@@ -51,7 +51,10 @@ public class Player : MonoBehaviour
 
     public void Move(int value)
     {
-        horizontialAxis = value;
+        if (GameController.Instance.isScore == false && GameController.Instance.EndMatch == false)
+        {
+            horizontialAxis = value;
+        }
     }
     
     public void StopMove()
@@ -63,13 +66,13 @@ public class Player : MonoBehaviour
     {
         if(canShoot)
         {
-            _ball.GetComponent<Rigidbody2D>().AddForce(new Vector2(400, 500));
+            _ball.GetComponent<Rigidbody2D>().AddForce(new Vector2(320, 400));
         }
     }
 
     public void Jump()
     {
-        if(grounded)
+        if(grounded && GameController.Instance.isScore == false && GameController.Instance.EndMatch == false)
         {
             canHead = true;
             _rbPlayer.velocity = new Vector2(_rbPlayer.velocity.x, 15);
