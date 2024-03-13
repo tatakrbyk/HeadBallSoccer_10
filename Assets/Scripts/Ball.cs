@@ -33,7 +33,7 @@ public class Ball : MonoBehaviour
             if(GameController.Instance.isScore == false && GameController.Instance.EndMatch == false)
             {
                 Instantiate(_goals, new Vector3(0, -2, 0), Quaternion.identity);
-                GameController.Instance.numberGoalsLeft++;
+                GameController.numberGoalsLeft++;
                 GameController.Instance.isScore = true;
                 GameController.Instance.ContinueMatch(false);
             }
@@ -44,7 +44,7 @@ public class Ball : MonoBehaviour
             {
                 Instantiate(_goalsAI, new Vector3(0, -2, 0), Quaternion.identity);
 
-                GameController.Instance.numberGoalsRight++;
+                GameController.numberGoalsRight++;
                 GameController.Instance.isScore = true;
                 GameController.Instance.ContinueMatch(true);
                 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Unity.IO.LowLevel.Unsafe.AsyncReadManagerMetrics;
 public class GameController : MonoBehaviour
@@ -15,8 +16,8 @@ public class GameController : MonoBehaviour
 
     public float timeMatch;
 
-    public int numberGoalsRight;
-    public int numberGoalsLeft;
+    public static int numberGoalsRight;
+    public static int numberGoalsLeft;
 
     public bool isScore;
     public bool EndMatch;
@@ -40,6 +41,8 @@ public class GameController : MonoBehaviour
     public SpriteRenderer headAI;
     public SpriteRenderer shoeAI;
     public SpriteRenderer bodyAI;
+
+    public GameObject pausePanel;
     private void Awake()
     {
         if (_instance == null)
@@ -51,6 +54,8 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         timeMatch = 90;
+        numberGoalsLeft = 0;
+        numberGoalsRight = 0;
 
         _ball = GameObject.FindGameObjectWithTag("Ball");
         _player = GameObject.FindGameObjectWithTag("Player");
@@ -92,6 +97,8 @@ public class GameController : MonoBehaviour
             }
             else
             {
+                StartCoroutine(WaitEndGame());
+
                 EndMatch = true;
                 break;
             }
@@ -124,5 +131,31 @@ public class GameController : MonoBehaviour
                 _ball.GetComponent<Rigidbody2D>().AddForce(new Vector2(100, 200));
             }
         }
+    }
+
+    public void ButtonPause()
+    {
+        pausePanel.SetActive(true);
+        Time.timeScale = 0f;
+    }
+    public void ButtonResume()
+    {
+        pausePanel.SetActive(false);
+        Time.timeScale = 1f;
+    }
+    public void ButtonLose()
+    {
+        numberGoalsRight = 3;
+        numberGoalsLeft = 0;
+        timeMatch = 0;
+        pausePanel.SetActive(false);
+        Time.timeScale =  1f;
+        StartCoroutine(WaitEndGame());
+    }
+
+    private IEnumerator WaitEndGame()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene("EndGama");
     }
 }
