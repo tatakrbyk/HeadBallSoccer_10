@@ -22,12 +22,23 @@ public class AIPlayer : MonoBehaviour
 
     public LayerMask groundLayer;
 
+    public Animator _animatorAI;
+
+    public int hashShoot;
+    public int hashJump;
+    public int hashMoveLeft;
+    public int hashMoveRight;
 
     private void Start()
     {
         _ball = GameObject.FindGameObjectWithTag("Ball");
         _player = GameObject.FindGameObjectWithTag("Player");
         _rbAI = GetComponent<Rigidbody2D>();
+
+        hashShoot = Animator.StringToHash("Shoot");
+        hashJump = Animator.StringToHash("Jump");
+        hashMoveLeft = Animator.StringToHash("MoveLeft");
+        hashMoveRight = Animator.StringToHash("MoveRight");
     }
 
     private void Update()
@@ -44,6 +55,15 @@ public class AIPlayer : MonoBehaviour
                 Jump();
             }
 
+            if(!grounded)
+            {
+                _animatorAI.SetBool(hashMoveRight, false);
+            }
+            else
+            {
+                _animatorAI.SetBool(hashJump, false);
+            }
+
         }
     }
     private void FixedUpdate()
@@ -53,6 +73,7 @@ public class AIPlayer : MonoBehaviour
 
     public void Move()
     {
+        _animatorAI.SetBool(hashMoveRight,true);
         if(Mathf.Abs(_ball.transform.position.x - transform.position.x) < rangeOfDefence)
         {
             if (Mathf.Abs(_ball.transform.position.x - transform.position.x) <= Mathf.Abs(_ball.transform.position.x - _player.transform.position.x) 
@@ -91,7 +112,9 @@ public class AIPlayer : MonoBehaviour
 
     public void Shoot()
     {
-        //_ball.GetComponent<Rigidbody>().velocity = new Vector2(0, 0);
+        _animatorAI.SetBool(hashMoveRight, false);
+        _animatorAI.SetTrigger("Shoot");
+        _ball.GetComponent<Rigidbody>().velocity = new Vector2(0, 0);
         _ball.GetComponent<Rigidbody2D>().AddForce(new Vector2(-50, 00));
 
     }
@@ -99,5 +122,10 @@ public class AIPlayer : MonoBehaviour
     public void Jump()
     {
         _rbAI.velocity = new Vector2(_rbAI.velocity.x, 15);
+    }
+
+    private void OnDisable()
+    {
+        _animatorAI.SetBool(hashJump, false);
     }
 }

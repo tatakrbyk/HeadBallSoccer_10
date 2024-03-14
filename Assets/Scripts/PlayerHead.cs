@@ -19,6 +19,8 @@ public class PlayerHead : MonoBehaviour
         {
             if(_player.GetComponent<Player>().canHead)
             {
+                _player.GetComponent<Player>()._animatorPlayer.SetBool("Jump", true);
+
                 _ball.GetComponent<Rigidbody>().velocity = new Vector2(0, 0);
                 _ball.GetComponent<Rigidbody2D>().AddForce(new Vector2(300, 400));
 

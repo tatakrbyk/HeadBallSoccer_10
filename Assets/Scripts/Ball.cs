@@ -6,13 +6,20 @@ public class Ball : MonoBehaviour
 {
     private GameObject _player;
     private GameObject _AI;
+
     public GameObject _goals;
     public GameObject _goalsAI;
+
+    public float angleOrientBall ;
 
     private void Start()
     {
         _player = GameObject.FindGameObjectWithTag("Player");
         _AI = GameObject.FindGameObjectWithTag("AI");
+    }
+    private void Update()
+    {
+        angleOrientBall = Mathf.Atan2(3 - Mathf.Abs(_player.transform.position.x - this.transform.position.x), 1.5f) * Mathf.Rad2Deg;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -61,6 +68,8 @@ public class Ball : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             _player.GetComponent<Player>().canShoot = false;
+
+            
         }
         if (collision.gameObject.tag == "canShootAI")
         {

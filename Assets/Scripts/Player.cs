@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -20,6 +21,18 @@ public class Player : MonoBehaviour
 
     public LayerMask groundLayer;
 
+    public GameObject buttonShoot;
+    public GameObject buttonMoveLeft;
+    public GameObject buttonMoveRight;
+    public GameObject buttonJump;
+
+    public Animator _animatorPlayer;
+
+    public int hashShoot;
+    public int hashJump;
+    public int hashMoveLeft;
+    public int hashMoveRight;
+
     private void Awake()
     {
         if(instance == null)
@@ -29,6 +42,11 @@ public class Player : MonoBehaviour
     {
         _rbPlayer = GetComponent<Rigidbody2D>();
         _ball = GameObject.FindGameObjectWithTag("Ball");
+
+        hashShoot = Animator.StringToHash("Shoot");
+        hashJump = Animator.StringToHash("Jump");
+        hashMoveLeft = Animator.StringToHash("MoveLeft");
+        hashMoveRight = Animator.StringToHash("MoveRight");
     }
 
     private void Update()
@@ -37,10 +55,15 @@ public class Player : MonoBehaviour
         if(grounded)
         {
             canHead = false;
+            _animatorPlayer.SetBool(hashJump, false);
+
         }
         else
         {
             canHead = true;
+            _animatorPlayer.SetBool(hashMoveRight, false);
+            _animatorPlayer.SetBool(hashMoveLeft, false);
+
         }
     }
     private void FixedUpdate()
@@ -51,31 +74,84 @@ public class Player : MonoBehaviour
 
     public void Move(int value)
     {
+        if(value == 1)
+        {
+            _animatorPlayer.SetBool(hashMoveRight, true);
+
+            buttonMoveRight.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
+            buttonMoveRight.GetComponent<Image>().CrossFadeAlpha(0.4f, 0.1f, true);
+        }
+        if (value == -1)
+        {
+            _animatorPlayer.SetBool(hashMoveLeft, true);
+
+            buttonMoveLeft.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
+            buttonMoveLeft.GetComponent<Image>().CrossFadeAlpha(0.4f, 0.1f, true);
+        }
+
         if (GameController.Instance.isScore == false && GameController.Instance.EndMatch == false)
         {
             horizontialAxis = value;
         }
     }
     
-    public void StopMove()
+    public void StopMoveLeft(int value)
     {
+        if (value == 1)
+        {
+            _animatorPlayer.SetBool(hashMoveRight, false);
+
+            buttonMoveRight.transform.localScale = new Vector3(1f, 1f, 1f);
+            buttonMoveRight.GetComponent<Image>().CrossFadeAlpha(1f, 0.1f, true);
+        }
+        if (value == -1)
+        {
+            _animatorPlayer.SetBool(hashMoveLeft, false);
+
+            buttonMoveLeft.transform.localScale = new Vector3(1f, 1f, 1f);
+            buttonMoveLeft.GetComponent<Image>().CrossFadeAlpha(1f, 0.1f, true);
+
+        }
         horizontialAxis = 0;
     }
 
     public void Shoot()
     {
+        _animatorPlayer.SetTrigger(hashShoot);
+
+        buttonShoot.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
+        buttonShoot.GetComponent<Image>().CrossFadeAlpha(0.4f, 0.1f, true);
         if(canShoot)
         {
-            _ball.GetComponent<Rigidbody2D>().AddForce(new Vector2(320, 400));
+            _ball.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
+            _ball.GetComponent<Rigidbody2D>().AddForce(new Vector2(9, 9 * Mathf.Tan(_ball.GetComponent<Ball>().angleOrientBall * Mathf.Deg2Rad)), ForceMode2D.Impulse);
         }
     }
 
+    public void StopShoot()
+    {
+        buttonShoot.transform.localScale = new Vector3(1f, 1f, 1f);
+        buttonShoot.GetComponent<Image>().CrossFadeAlpha(1f, 0.1f, true);
+    }
     public void Jump()
     {
         if(grounded && GameController.Instance.isScore == false && GameController.Instance.EndMatch == false)
         {
+            buttonJump.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
+            buttonJump.GetComponent<Image>().CrossFadeAlpha(0.4f, 0.1f, true);
+
             canHead = true;
             _rbPlayer.velocity = new Vector2(_rbPlayer.velocity.x, 15);
         }
+    }
+
+    public void StopJump()
+    {
+        buttonJump.transform.localScale = new Vector3(1f, 1f, 1f);
+        buttonJump.GetComponent<Image>().CrossFadeAlpha(1f, 0.1f, true);
+    }
+    private void OnDisable()
+    {
+        _animatorPlayer.SetBool(hashJump, false);
     }
 }
