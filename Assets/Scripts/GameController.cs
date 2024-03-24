@@ -75,7 +75,24 @@ public class GameController : MonoBehaviour
         bodyAI.sprite = UITeam.Instance.body[PlayerPrefs.GetInt("valueAI", 1) - 1];
         shoeAI.sprite = UITeam.Instance.shoe[Random.Range(0, 4)];
 
-        StartCoroutine(BeginMatch());
+        if(Menu.mode == (int)Menu.MODE.WORLDCUP)
+        {
+            int match = PlayerPrefs.GetInt("matchStageWC", 0);
+            match++;
+            PlayerPrefs.SetInt("matchStageWC", match);
+
+            StartCoroutine(BeginMatch());
+
+            if (match <= 3)
+            {
+                SetupScoreWC.instance.SetupScoreGroupStage();
+            }
+            else if(match == 4)
+            {
+                SetupScoreWC.instance.SetupScoreR16();
+            }
+        }
+        
     }
 
     private void Update()
@@ -145,8 +162,9 @@ public class GameController : MonoBehaviour
     }
     public void ButtonLose()
     {
-        numberGoalsRight = 3;
-        numberGoalsLeft = 0;
+        // TODO (taha): Right 3 left 0
+        numberGoalsRight = 0;
+        numberGoalsLeft = 3;
         timeMatch = 0;
         pausePanel.SetActive(false);
         Time.timeScale =  1f;

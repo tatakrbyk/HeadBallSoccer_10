@@ -7,13 +7,26 @@ using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
+
+    public static Menu instance;
     public GameObject panelLoadding;
     public GameObject panelTransit;
     public Image loadingBar;
     public static bool isLoadding;
+    public static int mode;
     public TextMeshProUGUI loaddingText;
+    public TextMeshProUGUI moneyText;
+
+    private void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
+
+        PlayerPrefs.DeleteAll();
+
+        // TODO (taha): Show ads
         if (isLoadding == false)
         {
             StartCoroutine(WaitLoaddingMenu());
@@ -26,6 +39,7 @@ public class Menu : MonoBehaviour
 
     private void Update()
     {
+        moneyText.text = PlayerPrefs.GetInt("money").ToString();
         if(loadingBar.fillAmount < 1)
         {
             loadingBar.fillAmount += 0.01f;
@@ -51,6 +65,28 @@ public class Menu : MonoBehaviour
 
     public void ExhibitionButton()
     {
+        mode = (int)MODE.EXHIBITION;
+
         SceneManager.LoadScene("Exhibition");
+    }
+    public void WorldCupButton()
+    {
+        mode = (int)MODE.WORLDCUP;
+
+        SceneManager.LoadScene("WC");
+    }
+    public void ShopButton()
+    {
+        SceneManager.LoadScene("Shop");
+    }
+
+    public void ButtonAdd()
+    {
+        SceneManager.LoadScene("Shop");
+    }
+
+    public enum MODE
+    {
+        EXHIBITION, WORLDCUP
     }
 }

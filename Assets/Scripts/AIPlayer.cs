@@ -114,7 +114,7 @@ public class AIPlayer : MonoBehaviour
     {
         _animatorAI.SetBool(hashMoveRight, false);
         _animatorAI.SetTrigger("Shoot");
-        _ball.GetComponent<Rigidbody>().velocity = new Vector2(0, 0);
+        //_ball.GetComponent<Rigidbody>().velocity = new Vector2(0, 0);
         _ball.GetComponent<Rigidbody2D>().AddForce(new Vector2(-50, 00));
 
     }
