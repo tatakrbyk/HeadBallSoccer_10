@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class WorldCupController : MonoBehaviour
 {
@@ -17,6 +18,11 @@ public class WorldCupController : MonoBehaviour
     public GameObject panelSelectTeam;
     public GameObject panelGroupStage;
     public GameObject panelR16;
+    public GameObject panelR8;
+    public GameObject panelR4;
+    public GameObject panelR2;
+    
+
     public int[,] valueTeamWC = new int[4,8];
 
     public int[] scoreTeam = new int[46];
@@ -26,6 +32,14 @@ public class WorldCupController : MonoBehaviour
     
     public List<int> listR16_1 = new List<int>();
     public List<int> listR16_2 = new List<int>();
+    
+    public List<int> listR8_1 = new List<int>();
+    public List<int> listR8_2 = new List<int>();
+
+    public List<int> listR4_1 = new List<int>();
+    public List<int> listR4_2 = new List<int>();
+
+    public List<int> listR2 = new List<int>();
 
 
     private void Awake()
@@ -37,9 +51,12 @@ public class WorldCupController : MonoBehaviour
         if(PlayerPrefs.GetInt("selectTeamWC",0)  == 0)
         {
             panelSelectTeam.SetActive(true);
+
             panelGroupStage.SetActive(false);
             panelR16.SetActive(false);
-
+            panelR8.SetActive(false);
+            panelR4.SetActive(false);
+            panelR2.SetActive(false);
             for(int i = 0; i < 32; i++)
             {
                 PlayerPrefs.SetInt("scoreTeam" + i, 0);
@@ -51,6 +68,9 @@ public class WorldCupController : MonoBehaviour
             {
                 panelSelectTeam.SetActive(false);
                 panelR16.SetActive(false);
+                panelR8.SetActive(false);
+                panelR4.SetActive(false);
+                panelR2.SetActive(false);
                 panelGroupStage.SetActive(true);
 
                 GetUIStageGroup();
@@ -61,11 +81,59 @@ public class WorldCupController : MonoBehaviour
             {
                 panelSelectTeam.SetActive(false);
                 panelGroupStage.SetActive(false);
+                panelR8.SetActive(false);
+                panelR4.SetActive(false);
+                panelR2.SetActive(false);
+
                 panelR16.SetActive(true);
 
+
                 SetupR16();
+                SetupMatchGroupStage();
             }
-            
+            else if(PlayerPrefs.GetInt("matchStageWC", 0) == 5 || PlayerPrefs.GetInt("matchStageWC", 0) == 6)
+            {
+                panelSelectTeam.SetActive(false);
+                panelGroupStage.SetActive(false);
+                panelR16.SetActive(false);
+                panelR4.SetActive(false);
+                panelR2.SetActive(false);
+
+                panelR8.SetActive(true);
+
+
+                SetupMatchGroupStage();
+                SetupR8();
+            }
+            else if (PlayerPrefs.GetInt("matchStageWC", 0) == 7 || PlayerPrefs.GetInt("matchStageWC", 0) == 8)
+            {
+                panelSelectTeam.SetActive(false);
+                panelGroupStage.SetActive(false);
+                panelR16.SetActive(false);
+                panelR8.SetActive(false);
+                panelR2.SetActive(false);
+
+                panelR4.SetActive(true);
+
+
+                SetupMatchGroupStage();
+                SetupR4();
+            }
+            else
+            {
+                panelSelectTeam.SetActive(false);
+                panelGroupStage.SetActive(false);
+                panelR16.SetActive(false);
+                panelR8.SetActive(false);
+                panelR4.SetActive(false);
+
+                panelR2.SetActive(true);
+
+
+                SetupMatchGroupStage();
+                SetupR2();
+            }
+
         }
     }
     private void Update()
@@ -139,11 +207,58 @@ public class WorldCupController : MonoBehaviour
         SetupGroupStage();
     }
 
+    public void ButtonNextR2()
+    {
+        if (PlayerPrefs.GetInt("matchStageWC", 0) <= 9)
+        {
+            SceneManager.LoadScene("Game");
+        }
+        
+
+    }
+    public void ButtonNextR4()
+    {
+        if (PlayerPrefs.GetInt("matchStageWC", 0) <= 7)
+        {
+            SceneManager.LoadScene("Game");
+        }
+        else if (PlayerPrefs.GetInt("matchStageWC", 0) == 8)
+        {
+            panelR4.SetActive(false);
+            panelR2.SetActive(true);
+
+            SetupR2();
+        }
+
+    }
+    public void ButtonNextR8()
+    {
+        if (PlayerPrefs.GetInt("matchStageWC", 0) <= 5)
+        {
+            SceneManager.LoadScene("Game");
+        }
+        else if (PlayerPrefs.GetInt("matchStageWC", 0) == 6)
+        {
+            panelR8.SetActive(false);
+            panelR4.SetActive(true);
+            
+            SetupR4();
+        }
+
+    }
+
     public void ButtonNextR16()
     {
         if (PlayerPrefs.GetInt("matchStageWC", 0) == 3)
         {      
             SceneManager.LoadScene("Game"); 
+        }
+        else if( PlayerPrefs.GetInt("matchStageWC", 0) == 4)
+        {
+            panelR8.SetActive(true);
+            panelR16.SetActive(false);
+
+            SetupR8();
         }
         
     }
@@ -217,6 +332,164 @@ public class WorldCupController : MonoBehaviour
         
     }
 
+    public void SetupR2()
+    {
+        GameObject team = GameObject.FindGameObjectWithTag("R2");
+        for(int i = 0;  i < 2; i++)
+        {
+            team.transform.GetChild(i).GetComponent<UIR16>().flag.sprite =
+                        UITeam.Instance.flagTeam[PlayerPrefs.GetInt("value_r2::" + i) - 1];
+            team.transform.GetChild(i).GetComponent<UIR16>().nameText.text =
+                        UITeam.Instance.nameTeam[PlayerPrefs.GetInt("value_r2::" + i) - 1];
+
+            if (PlayerPrefs.GetInt("matchStageWC", 0) == 8)
+            {
+                team.transform.GetChild(i).GetComponent<UIR16>().scoreText.text = "-";
+            }
+            else if(PlayerPrefs.GetInt("matchStageWC", 0) == 9)
+            {
+                team.transform.GetChild(i).GetComponent<UIR16>().scoreText.text =
+                     PlayerPrefs.GetInt("score_r2 " + PlayerPrefs.GetInt("value_r2:" + i)).ToString();
+            }
+            if (PlayerPrefs.GetInt("valuePlayer", 1) == PlayerPrefs.GetInt("value_r2:" + i))
+            {
+                team.transform.GetChild(i).GetComponent<UIR16>().nameText.color = Color.green;
+                team.transform.GetChild(i).GetComponent<UIR16>().scoreText.color = Color.green;
+            }
+
+
+
+        }
+    }
+    public void SetupR4()
+    {
+        GameObject[] _uiTeam_1 = GameObject.FindGameObjectsWithTag("R4_1");
+        GameObject[] _uiTeam_2 = GameObject.FindGameObjectsWithTag("R4_2");
+
+        for (int i = 0; i < _uiTeam_1.Length; i++)
+        {
+
+            for (int j = 0; j < 2; j++)
+            {
+                _uiTeam_1[i].transform.GetChild(j).GetComponent<UIR16>().flag.sprite =
+                        UITeam.Instance.flagTeam[PlayerPrefs.GetInt("value_r4::" + j + "," + i) - 1];
+
+                _uiTeam_1[i].transform.GetChild(j).GetComponent<UIR16>().nameText.text =
+                    UITeam.Instance.nameTeam[PlayerPrefs.GetInt("value_r4:" + j + "," + i) - 1];
+
+                if (PlayerPrefs.GetInt("matchStageWC", 0) == 6)
+                {
+                    _uiTeam_1[i].transform.GetChild(j).GetComponent<UIR16>().scoreText.text = "-";
+                }
+                else
+                {
+                    _uiTeam_1[i].transform.GetChild(j).GetComponent<UIR16>().scoreText.text =
+                        PlayerPrefs.GetInt("score_R4_1" + PlayerPrefs.GetInt("value_r4:" + j + "," + i)).ToString();
+
+                }
+                if (PlayerPrefs.GetInt("valuePlayer", 1) == PlayerPrefs.GetInt("value_r4:" + j + "," + i))
+                {
+                    _uiTeam_1[i].transform.GetChild(j).GetComponent<UIR16>().nameText.color = Color.green;
+                    _uiTeam_1[i].transform.GetChild(j).GetComponent<UIR16>().scoreText.color = Color.green;
+                }
+            }
+        }
+
+        for (int i = 0; i < _uiTeam_2.Length; i++)
+        {
+
+            for (int j = 0; j < 2; j++)
+            {
+                _uiTeam_2[i].transform.GetChild(j).GetComponent<UIR16>().flag.sprite =
+                        UITeam.Instance.flagTeam[PlayerPrefs.GetInt("value_r4::" + j + "," + i) - 1];
+
+                _uiTeam_2[i].transform.GetChild(j).GetComponent<UIR16>().nameText.text =
+                    UITeam.Instance.nameTeam[PlayerPrefs.GetInt("value_r4:" + j + "," + i) - 1];
+
+                if (PlayerPrefs.GetInt("matchStageWC", 0) <= 7)
+                {
+                    _uiTeam_2[i].transform.GetChild(j).GetComponent<UIR16>().scoreText.text = "-";
+                }
+                else
+                {
+                    _uiTeam_2[i].transform.GetChild(j).GetComponent<UIR16>().scoreText.text =
+                        PlayerPrefs.GetInt("score_R4_2 " + PlayerPrefs.GetInt("value_r4:" + j + "," + i)).ToString();
+
+                }
+                if (PlayerPrefs.GetInt("valuePlayer", 1) == PlayerPrefs.GetInt("value_r4:" + j + "," + i))
+                {
+                    _uiTeam_2[i].transform.GetChild(j).GetComponent<UIR16>().nameText.color = Color.green;
+                    _uiTeam_2[i].transform.GetChild(j).GetComponent<UIR16>().scoreText.color = Color.green;
+                }
+            }
+        }
+    }
+    public void SetupR8()
+    {
+        GameObject[] _uiTeam_1 = GameObject.FindGameObjectsWithTag("R8_1");
+        GameObject[] _uiTeam_2 = GameObject.FindGameObjectsWithTag("R8_2");
+
+        for (int i = 0; i < _uiTeam_1.Length; i++)
+        {
+
+            for (int j = 0; j < 2; j++)
+            {
+                _uiTeam_1[i].transform.GetChild(j).GetComponent<UIR16>().flag.sprite =
+                        UITeam.Instance.flagTeam[PlayerPrefs.GetInt("value_r8::" + j + "," + i) - 1];
+
+                _uiTeam_1[i].transform.GetChild(j).GetComponent<UIR16>().nameText.text =
+                    UITeam.Instance.nameTeam[PlayerPrefs.GetInt("value_r8:" + j + "," + i) - 1];
+
+                if (PlayerPrefs.GetInt("matchStageWC", 0) == 4)
+                {
+                    _uiTeam_1[i].transform.GetChild(j).GetComponent<UIR16>().scoreText.text = "-";
+                }
+                else
+                {
+                    _uiTeam_1[i].transform.GetChild(j).GetComponent<UIR16>().scoreText.text =
+                        PlayerPrefs.GetInt("score_R8_1" + PlayerPrefs.GetInt("value_r8:" + j + "," + i)).ToString();
+
+                }
+                if (PlayerPrefs.GetInt("valuePlayer", 1) == PlayerPrefs.GetInt("value_r8:" + j + "," + i))
+                {
+                    _uiTeam_1[i].transform.GetChild(j).GetComponent<UIR16>().nameText.color = Color.green;
+                    _uiTeam_1[i].transform.GetChild(j).GetComponent<UIR16>().scoreText.color = Color.green;
+                }
+            }
+        }
+
+
+        for (int i = 0; i < _uiTeam_2.Length; i++)
+        {
+
+            for (int j = 0; j < 2; j++)
+            {
+                _uiTeam_2[i].transform.GetChild(j).GetComponent<UIR16>().flag.sprite =
+                        UITeam.Instance.flagTeam[PlayerPrefs.GetInt("value_r8::" + j + "," + i) - 1];
+
+                _uiTeam_2[i].transform.GetChild(j).GetComponent<UIR16>().nameText.text =
+                    UITeam.Instance.nameTeam[PlayerPrefs.GetInt("value_r8:" + j + "," + i) - 1];
+
+                if (PlayerPrefs.GetInt("matchStageWC", 0) <= 5)
+                {
+                    _uiTeam_2[i].transform.GetChild(j).GetComponent<UIR16>().scoreText.text = "-";
+                }
+                else
+                {
+                    _uiTeam_2[i].transform.GetChild(j).GetComponent<UIR16>().scoreText.text = 
+                        PlayerPrefs.GetInt("score_R8_2" + PlayerPrefs.GetInt("value_r8:" + j + "," + i)).ToString();
+
+                }
+                if (PlayerPrefs.GetInt("valuePlayer", 1) == PlayerPrefs.GetInt("value_r8:" + j + "," + i))
+                {
+                    _uiTeam_2[i].transform.GetChild(j).GetComponent<UIR16>().nameText.color = Color.green;
+                    _uiTeam_2[i].transform.GetChild(j).GetComponent<UIR16>().scoreText.color = Color.green;
+                }
+            }
+
+        }
+        
+    }
     public void SetupR16()
     {
         int[,] _valueR16 = new int[2, 8];
@@ -413,7 +686,155 @@ public class WorldCupController : MonoBehaviour
                     }
                 }
 
-                    break;
+                break;
+            case 4:
+            case 5:
+                for(int i = 0; i < 8; i++)
+                {
+                    if (PlayerPrefs.GetInt("score_R16" + PlayerPrefs.GetInt("value_r16:" + 0 + "," + i)) >=
+                        PlayerPrefs.GetInt("score_R16" + PlayerPrefs.GetInt("value_r16:" + 1 + "," + i)))
+                    {
+                        if( i % 2 == 0)
+                        {
+                            listR8_1.Add(PlayerPrefs.GetInt("value_r16:" + 0 + "," + i));
+                        }
+                        else
+                        {
+                            listR8_2.Add(PlayerPrefs.GetInt("value_r16:" + 0 + "," + i));
+
+                        }
+                    }
+                    else
+                    {
+                        if(i % 2 == 0)
+                        {
+                            listR8_1.Add(PlayerPrefs.GetInt("value_r16:" + 1 + "," + i));
+
+                        }
+                        else
+                        {
+                            listR8_2.Add(PlayerPrefs.GetInt("value_r16:" + 1 + "," + i));
+
+                        }
+                    }
+
+                }
+
+                for(int i = 0; i < listR8_1.Count; i++)
+                {
+                    PlayerPrefs.SetInt("value_r8:" + 0 + "," + i, listR8_1[i]);
+                    PlayerPrefs.SetInt("value_r8:" + 1 + "," + i, listR8_2[i]);
+                }
+                for (int i = 0; i < listR8_1.Count; i++)
+                {
+                    if (listR8_1[i] == PlayerPrefs.GetInt("valuePlayer", 1))
+                    {
+                        PlayerPrefs.SetInt("valueAI", listR8_2[i]);
+                        listR8_1.RemoveAt(i);
+                        listR8_2.RemoveAt(i);
+                    }
+                    else if (listR8_2[i] == PlayerPrefs.GetInt("valuePlayer", 1))
+                    {
+                        PlayerPrefs.SetInt("valueAI", listR8_1[i]);
+                        listR8_1.RemoveAt(i);
+                        listR8_2.RemoveAt(i);
+                    }
+                }
+
+                break;
+
+            case 6:
+            case 7:
+                for (int i = 0; i < 4;i++)
+                {
+                    if(PlayerPrefs.GetInt("Score_R8_1" + PlayerPrefs.GetInt("value_r8:" + 0 + "," + i))
+                        + PlayerPrefs.GetInt("Score_R8_2" + PlayerPrefs.GetInt("value_r8:" + 0 + "," + i))
+                        >= PlayerPrefs.GetInt("Score_R8_1" + PlayerPrefs.GetInt("value_r8:" + 1 + "," + i))
+                        + PlayerPrefs.GetInt("Score_R8_2" + PlayerPrefs.GetInt("value_r8:" + 1 + "," + i)))
+                    {
+                        if( i % 2 == 0)
+                        {
+                            listR4_1.Add(PlayerPrefs.GetInt("value_r8:" + 0 + "," + i));
+                        }
+                        else
+                        {
+                            listR4_2.Add(PlayerPrefs.GetInt("value_r8:" + 0 + "," + i));
+                        }
+                    }
+                    else
+                    {
+                        if (i % 2 == 0)
+                        {
+                            listR4_1.Add(PlayerPrefs.GetInt("value_r8:" + 1 + "," + i));
+                        }
+                        else
+                        {
+                            listR4_2.Add(PlayerPrefs.GetInt("value_r8:" + 1 + "," + i));
+                        }
+                    }
+                }
+                for(int i = 0; i < listR4_1.Count; i++)
+                {
+                    PlayerPrefs.SetInt("value_r4:" + 0 + "," + i, listR4_1[i]);
+                    PlayerPrefs.SetInt("value_r4:" + 1 + "," + i, listR4_2[i]);
+                }
+                for (int i = 0; i < listR4_1.Count; i++)
+                {
+                    if (listR4_1[i] == PlayerPrefs.GetInt("valuePlayer", 1))
+                    {
+                        PlayerPrefs.SetInt("valueAI", listR4_2[i]);
+                        listR4_1.RemoveAt(i);
+                        listR4_2.RemoveAt(i);
+                    }
+                    else if (listR4_2[i] == PlayerPrefs.GetInt("valuePlayer", 1))
+                    {
+                        PlayerPrefs.SetInt("valueAI", listR4_1[i]);
+                        listR4_1.RemoveAt(i);
+                        listR4_2.RemoveAt(i);
+                    }
+                }
+                break;
+
+            case 8:
+                listR2.Clear();
+                for(int i = 0; i < 2; i++)
+                {
+                    if (PlayerPrefs.GetInt("Score_R4_1" + PlayerPrefs.GetInt("value_r4:" + 0 + "," + i))
+                        + PlayerPrefs.GetInt("Score_R4_2" + PlayerPrefs.GetInt("value_r4:" + 0 + "," + i))
+                        >=
+                        PlayerPrefs.GetInt("Score_R4_1" + PlayerPrefs.GetInt("value_r4:" + 1 + "," + i))
+                        + PlayerPrefs.GetInt("Score_R4_2" + PlayerPrefs.GetInt("value_r4:" + 1 + "," + i)))
+                    {
+                        listR2.Add(PlayerPrefs.GetInt("value_r4:" + 0 + "," + i));
+
+                    }
+                    else
+                    {
+                        listR2.Add(PlayerPrefs.GetInt("value_r4:" + 1 + "," + i));
+                        
+                    }
+                }
+                for (int i = 0; i < listR2.Count; i++)
+                {
+                    PlayerPrefs.SetInt("value_r2:" + i, listR2[i]);
+                }
+       
+                for (int i = 0; i < listR2.Count; i++)
+                {
+                    if (listR2[i] == PlayerPrefs.GetInt("valuePlayer", 1))
+                    {
+                        listR2.RemoveAt(i);
+                        PlayerPrefs.SetInt("valueAI", listR2[0]);
+                    }
+                }
+                break;
+            case 9:
+                for (int i = 0; i < 2; i++)
+                {
+
+                }
+                break;
+                
             
         }
     }

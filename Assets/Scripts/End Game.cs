@@ -102,10 +102,41 @@ public class EndGame : MonoBehaviour
         if(PlayerPrefs.GetInt("matchStageWC", 0 ) <= 3)
         {
             ListSortScore();
-        }else if (PlayerPrefs.GetInt("matchStageWC", 0) == 4)
+        }
+        else if (PlayerPrefs.GetInt("matchStageWC", 0) == 4)
         {
             PlayerPrefs.SetInt("score_R16" + PlayerPrefs.GetInt("valuePlayer", 1), GameController.numberGoalsLeft);
             PlayerPrefs.SetInt("score_R16" + PlayerPrefs.GetInt("valueAI", 1), GameController.numberGoalsRight);
+
+        }
+        else if (PlayerPrefs.GetInt("matchStageWC", 0) == 5)
+        {
+            PlayerPrefs.SetInt("score_R8_1" + PlayerPrefs.GetInt("valuePlayer", 1), GameController.numberGoalsLeft);
+            PlayerPrefs.SetInt("score_R8_1" + PlayerPrefs.GetInt("valueAI", 1), GameController.numberGoalsRight);
+
+        }
+        else if (PlayerPrefs.GetInt("matchStageWC", 0) == 6)
+        {
+            PlayerPrefs.SetInt("score_R8_2" + PlayerPrefs.GetInt("valuePlayer", 1), GameController.numberGoalsLeft);
+            PlayerPrefs.SetInt("score_R8_2" + PlayerPrefs.GetInt("valueAI", 1), GameController.numberGoalsRight);
+
+        }
+        else if (PlayerPrefs.GetInt("matchStageWC", 0) == 7)
+        {
+            PlayerPrefs.SetInt("score_R4_1" + PlayerPrefs.GetInt("valuePlayer", 1), GameController.numberGoalsLeft);
+            PlayerPrefs.SetInt("score_R4_1" + PlayerPrefs.GetInt("valueAI", 1), GameController.numberGoalsRight);
+
+        }
+        else if (PlayerPrefs.GetInt("matchStageWC", 0) == 8)
+        {
+            PlayerPrefs.SetInt("score_R4_2" + PlayerPrefs.GetInt("valuePlayer", 1), GameController.numberGoalsLeft);
+            PlayerPrefs.SetInt("score_R4_2" + PlayerPrefs.GetInt("valueAI", 1), GameController.numberGoalsRight);
+
+        }
+        else if (PlayerPrefs.GetInt("matchStageWC", 0) == 9)
+        {
+            PlayerPrefs.SetInt("score_r2" + PlayerPrefs.GetInt("valuePlayer", 1), GameController.numberGoalsLeft);
+            PlayerPrefs.SetInt("score_r2" + PlayerPrefs.GetInt("valueAI", 1), GameController.numberGoalsRight);
 
         }
     }

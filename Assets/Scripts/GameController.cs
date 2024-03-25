@@ -91,6 +91,14 @@ public class GameController : MonoBehaviour
             {
                 SetupScoreWC.instance.SetupScoreR16();
             }
+            else if(match == 5 || match == 6)
+            {
+                SetupScoreWC.instance.SetupScoreR8();
+            }
+            else if (match == 7 || match == 8)
+            {
+                SetupScoreWC.instance.SetupScoreR4();
+            }
         }
         
     }

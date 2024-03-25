@@ -48,4 +48,61 @@ public class SetupScoreWC : MonoBehaviour
             PlayerPrefs.SetInt("score_R16" + (WorldCupController.instance.listR16_2[i]), random2);
         }
     }
+
+    public void SetupScoreR8()
+    {
+        int match = PlayerPrefs.GetInt("matchStageWC", 0);
+        for (int i = 0; i < WorldCupController.instance.listR8_1.Count; i++)
+        {
+            int random1 = Random.Range(0, 6);
+            int random2 = Random.Range(5, 10);
+            
+            if(match == 5)
+            {
+                PlayerPrefs.SetInt("score_R8_1" + (WorldCupController.instance.listR8_1[i]), random1);
+                PlayerPrefs.SetInt("score_R8_1" + (WorldCupController.instance.listR8_2[i]), random2);
+            }
+            else if(match == 6)
+            {
+                PlayerPrefs.SetInt("score_R8_2" + (WorldCupController.instance.listR8_1[i]), random1);
+                PlayerPrefs.SetInt("score_R8_2" + (WorldCupController.instance.listR8_2[i]), random2);
+            }
+        }
+    }
+
+    public void SetupScoreR4()
+    {
+        int match = PlayerPrefs.GetInt("matchStageWC", 0);
+        for (int i = 0; i < WorldCupController.instance.listR4_1.Count; i++)
+        {
+            int random1 = Random.Range(0, 6);
+            int random2 = Random.Range(5, 10);
+
+            if (match == 7)
+            {
+                PlayerPrefs.SetInt("score_R4_1" + (WorldCupController.instance.listR4_1[i]), random1);
+                PlayerPrefs.SetInt("score_R4_1" + (WorldCupController.instance.listR4_2[i]), random2);
+            }
+            else if (match == 8)
+            {
+                PlayerPrefs.SetInt("score_R4_2" + (WorldCupController.instance.listR4_1[i]), random1);
+                PlayerPrefs.SetInt("score_R4_2" + (WorldCupController.instance.listR4_2[i]), random2);
+            }
+        }
+    }
+    public void SetupScoreR2()
+    {
+        int match = PlayerPrefs.GetInt("matchStageWC", 0);
+        for (int i = 0; i < WorldCupController.instance.listR2.Count; i++)
+        {
+            int random1 = Random.Range(0, 6);
+            int random2 = Random.Range(5, 10);
+
+            if (match == 7)
+            {
+                PlayerPrefs.SetInt("score_R2_1" + (WorldCupController.instance.listR2[i]), random1);
+            }
+          
+        }
+    }
 }
